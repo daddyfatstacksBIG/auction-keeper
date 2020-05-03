@@ -48,14 +48,15 @@ class DynamicGasPrice(GasPrice):
         self.fixed_gas = None
         if arguments.ethgasstation_api_key:
             self.gas_station = EthGasStation(
-                refresh_interval=60, expiry=600, api_key=arguments.ethgasstation_api_key
-            )
+                refresh_interval=60,
+                expiry=600,
+                api_key=arguments.ethgasstation_api_key)
         elif arguments.etherchain_gas:
             self.gas_station = EtherchainOrg(refresh_interval=60, expiry=600)
         elif arguments.poanetwork_gas:
-            self.gas_station = POANetwork(
-                refresh_interval=60, expiry=600, alt_url=arguments.poanetwork_url
-            )
+            self.gas_station = POANetwork(refresh_interval=60,
+                                          expiry=600,
+                                          alt_url=arguments.poanetwork_url)
         elif arguments.fixed_gas_price:
             self.fixed_gas = int(round(arguments.fixed_gas_price * self.GWEI))
         self.initial_multiplier = arguments.gas_initial_multiplier
@@ -66,7 +67,8 @@ class DynamicGasPrice(GasPrice):
 
     def get_gas_price(self, time_elapsed: int) -> Optional[int]:
         # start with fast price from the configured gas API
-        fast_price = self.gas_station.fast_price() if self.gas_station else None
+        fast_price = self.gas_station.fast_price(
+        ) if self.gas_station else None
 
         # if API produces no price, or remote feed not configured, start with a fixed price
         if fast_price is None:
@@ -93,8 +95,7 @@ class DynamicGasPrice(GasPrice):
 
         retval += (
             f"and will multiply by {self.reactive_multiplier} every 30s to a maximum of "
-            f"{round(self.gas_maximum / self.GWEI, 1)} Gwei"
-        )
+            f"{round(self.gas_maximum / self.GWEI, 1)} Gwei")
         return retval
 
     def __repr__(self):

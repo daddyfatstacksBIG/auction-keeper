@@ -39,9 +39,8 @@ def create_cdp_with_surplus():
     assert c.adapter.join(address, dink).transact(from_address=address)
 
     dart = (dink * Wad(ilk.spot)) * Wad.from_number(0.99)
-    assert mcd.vat.frob(c.ilk, address, dink=dink, dart=dart).transact(
-        from_address=address
-    )
+    assert mcd.vat.frob(c.ilk, address, dink=dink,
+                        dart=dart).transact(from_address=address)
 
     assert mcd.jug.drip(c.ilk).transact(from_address=address)
 
