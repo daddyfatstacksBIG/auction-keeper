@@ -36,11 +36,13 @@ class TestAuctionKeeperBite(TransactionIgnoringTest):
                                          f"--ilk {c.ilk.name} "
                                          f"--model ./bogus-model.sh"), web3=mcd.web3)
         keeper.approve()
-        unsafe_cdp = create_unsafe_cdp(mcd, c, Wad.from_number(1.2), gal_address)
+        unsafe_cdp = create_unsafe_cdp(
+            mcd, c, Wad.from_number(1.2), gal_address)
         assert len(mcd.active_auctions()["flips"][c.ilk.name]) == 0
         # Keeper won't bid with a 0 Dai balance
         purchase_dai(Wad(20), keeper_address)
-        assert mcd.dai_adapter.join(keeper_address, Wad(20)).transact(from_address=keeper_address)
+        assert mcd.dai_adapter.join(keeper_address, Wad(
+            20)).transact(from_address=keeper_address)
 
         # when
         keeper.check_cdps()
@@ -72,15 +74,18 @@ class TestAuctionKeeperBite(TransactionIgnoringTest):
         # when a bid covers the CDP debt
         auction = c.flipper.bids(kick)
         reserve_dai(mcd, c, keeper_address, Wad(auction.tab) + Wad(1))
-        c.flipper.approve(c.flipper.vat(), approval_function=hope_directly(from_address=keeper_address))
+        c.flipper.approve(c.flipper.vat(), approval_function=hope_directly(
+            from_address=keeper_address))
         c.approve(keeper_address)
-        assert c.flipper.tend(kick, auction.lot, auction.tab).transact(from_address=keeper_address)
+        assert c.flipper.tend(kick, auction.lot, auction.tab).transact(
+            from_address=keeper_address)
         time_travel_by(web3, c.flipper.ttl() + 1)
         assert c.flipper.deal(kick).transact()
 
         # when a bid covers the vow debt
         assert mcd.vow.sin_of(last_bite.era(web3)) > Rad(0)
-        assert mcd.vow.flog(last_bite.era(web3)).transact(from_address=keeper_address)
+        assert mcd.vow.flog(last_bite.era(web3)).transact(
+            from_address=keeper_address)
         assert mcd.vow.heal(mcd.vat.sin(mcd.vow.address)).transact()
 
         # then ensure queued debt has been auctioned off

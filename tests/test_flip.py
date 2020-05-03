@@ -28,7 +28,7 @@ from pymaker.deployment import DssDeployment
 from pymaker.dss import Collateral
 from pymaker.numeric import Wad, Ray, Rad
 from tests.conftest import bite, create_unsafe_cdp, flog_and_heal, keeper_address, mcd, models, \
-                           reserve_dai, simulate_model_output, web3
+    reserve_dai, simulate_model_output, web3
 from tests.helper import args, time_travel_by, wait_for_other_threads, TransactionIgnoringTest
 from typing import Optional
 
@@ -65,10 +65,10 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         self.keeper_address = keeper_address(self.web3)
         self.collateral = self.mcd.collaterals['ETH-B']
         self.keeper = AuctionKeeper(args=args(f"--eth-from {self.keeper_address.address} "
-                                     f"--type flip "
-                                     f"--from-block 1 "
-                                     f"--ilk {self.collateral.ilk.name} "
-                                     f"--model ./bogus-model.sh"), web3=self.mcd.web3)
+                                              f"--type flip "
+                                              f"--from-block 1 "
+                                              f"--ilk {self.collateral.ilk.name} "
+                                              f"--model ./bogus-model.sh"), web3=self.mcd.web3)
         self.keeper.approve()
 
         assert isinstance(self.keeper.gas_price, DynamicGasPrice)
@@ -92,7 +92,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         initial_bid = flipper.bids(model.id)
         assert initial_bid.lot > Wad(0)
         our_bid = price * initial_bid.lot
-        reserve_dai(mcd, c, self.keeper_address, our_bid, extra_collateral=Wad.from_number(2))
+        reserve_dai(mcd, c, self.keeper_address, our_bid,
+                    extra_collateral=Wad.from_number(2))
         simulate_model_output(model=model, price=price, gas_price=gas_price)
 
     @staticmethod
@@ -103,14 +104,16 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert (isinstance(bid, Rad))
 
         current_bid = flipper.bids(id)
-        assert current_bid.guy != Address("0x0000000000000000000000000000000000000000")
+        assert current_bid.guy != Address(
+            "0x0000000000000000000000000000000000000000")
         assert current_bid.tic > datetime.now().timestamp() or current_bid.tic == 0
         assert current_bid.end > datetime.now().timestamp()
 
         assert lot == current_bid.lot
         assert bid <= current_bid.tab
         assert bid > current_bid.bid
-        assert (bid >= Rad(flipper.beg()) * current_bid.bid) or (bid == current_bid.tab)
+        assert (bid >= Rad(flipper.beg()) *
+                current_bid.bid) or (bid == current_bid.tab)
 
         assert flipper.tend(id, lot, bid).transact(from_address=address)
 
@@ -122,7 +125,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert (isinstance(bid, Rad))
 
         current_bid = flipper.bids(id)
-        assert current_bid.guy != Address("0x0000000000000000000000000000000000000000")
+        assert current_bid.guy != Address(
+            "0x0000000000000000000000000000000000000000")
         assert current_bid.tic > datetime.now().timestamp() or current_bid.tic == 0
         assert current_bid.end > datetime.now().timestamp()
 
@@ -141,11 +145,14 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert (isinstance(id, int))
         assert (isinstance(bid, Rad))
 
-        flipper.approve(flipper.vat(), approval_function=hope_directly(from_address=address))
+        flipper.approve(
+            flipper.vat(), approval_function=hope_directly(from_address=address))
         previous_bid = flipper.bids(id)
         c.approve(address)
-        reserve_dai(mcd, c, address, Wad(bid), extra_collateral=Wad.from_number(2))
-        TestAuctionKeeperFlipper.tend(flipper, id, address, previous_bid.lot, bid)
+        reserve_dai(mcd, c, address, Wad(bid),
+                    extra_collateral=Wad.from_number(2))
+        TestAuctionKeeperFlipper.tend(
+            flipper, id, address, previous_bid.lot, bid)
 
     def test_flipper_address(self):
         """ Sanity check ensures the keeper fixture is looking at the correct collateral """
@@ -243,10 +250,12 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert model.send_status.call_count == 1
 
         # when
-        flipper.approve(flipper.vat(), approval_function=hope_directly(from_address=other_address))
+        flipper.approve(flipper.vat(), approval_function=hope_directly(
+            from_address=other_address))
         previous_bid = flipper.bids(kick)
         new_bid_amount = Rad.from_number(80)
-        self.tend_with_dai(self.mcd, self.collateral, flipper, model.id, other_address, new_bid_amount)
+        self.tend_with_dai(self.mcd, self.collateral, flipper,
+                           model.id, other_address, new_bid_amount)
         # and
         self.keeper.check_all_auctions()
         wait_for_other_threads()
@@ -302,9 +311,11 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         model.terminate.assert_not_called()
 
         # when
-        flipper.approve(flipper.vat(), approval_function=hope_directly(from_address=other_address))
+        flipper.approve(flipper.vat(), approval_function=hope_directly(
+            from_address=other_address))
         new_bid_amount = Rad.from_number(85)
-        self.tend_with_dai(self.mcd, self.collateral, flipper, kick, other_address, new_bid_amount)
+        self.tend_with_dai(self.mcd, self.collateral, flipper,
+                           kick, other_address, new_bid_amount)
         # and
         time_travel_by(self.web3, flipper.ttl() + 1)
         # and
@@ -330,7 +341,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         model.terminate.assert_not_called()
 
         # when
-        self.tend_with_dai(self.mcd, self.collateral, flipper, kick, other_address, Rad.from_number(90))
+        self.tend_with_dai(self.mcd, self.collateral, flipper,
+                           kick, other_address, Rad.from_number(90))
         # and
         time_travel_by(self.web3, flipper.ttl() + 1)
         # and
@@ -378,14 +390,16 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         flipper = self.collateral.flipper
 
         # when
-        self.simulate_model_bid(self.mcd, self.collateral, model, Wad.from_number(16.0))
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model, Wad.from_number(16.0))
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
         auction = flipper.bids(kick)
-        assert round(auction.bid / Rad(auction.lot), 2) == round(Rad.from_number(16.0), 2)
+        assert round(auction.bid / Rad(auction.lot),
+                     2) == round(Rad.from_number(16.0), 2)
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -396,18 +410,21 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         (model, model_factory) = models(self.keeper, kick)
         flipper = self.collateral.flipper
         # and
-        self.tend_with_dai(self.mcd, self.collateral, flipper, kick, other_address, Rad.from_number(21))
+        self.tend_with_dai(self.mcd, self.collateral, flipper,
+                           kick, other_address, Rad.from_number(21))
         assert flipper.bids(kick).bid == Rad.from_number(21)
 
         # when
-        self.simulate_model_bid(self.mcd, self.collateral, model, Wad.from_number(23))
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model, Wad.from_number(23))
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
         auction = flipper.bids(kick)
-        assert round(auction.bid / Rad(auction.lot), 2) == round(Rad.from_number(23), 2)
+        assert round(auction.bid / Rad(auction.lot),
+                     2) == round(Rad.from_number(23), 2)
 
     def test_should_sequentially_tend_and_dent_if_price_takes_us_to_the_dent_phrase(self, kick, keeper_address):
         # given
@@ -416,9 +433,11 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         our_bid_price = Wad.from_number(150)
-        assert our_bid_price * flipper.bids(kick).lot > Wad(flipper.bids(1).tab)
+        assert our_bid_price * \
+            flipper.bids(kick).lot > Wad(flipper.bids(1).tab)
 
-        self.simulate_model_bid(self.mcd, self.collateral, model, our_bid_price)
+        self.simulate_model_bid(
+            self.mcd, self.collateral, model, our_bid_price)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -429,7 +448,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert auction.lot == tend_lot
 
         # when
-        reserve_dai(self.mcd, self.collateral, keeper_address, Wad(auction.tab))
+        reserve_dai(self.mcd, self.collateral,
+                    keeper_address, Wad(auction.tab))
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
@@ -437,7 +457,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         auction = flipper.bids(kick)
         assert auction.bid == auction.tab
         assert auction.lot < tend_lot
-        assert round(auction.bid / Rad(auction.lot), 2) == round(Rad(our_bid_price), 2)
+        assert round(auction.bid / Rad(auction.lot),
+                     2) == round(Rad(our_bid_price), 2)
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -450,7 +471,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         first_bid_price = Wad.from_number(140)
-        self.simulate_model_bid(self.mcd, self.collateral, model, first_bid_price)
+        self.simulate_model_bid(
+            self.mcd, self.collateral, model, first_bid_price)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -462,7 +484,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         second_bid_price = Wad.from_number(150)
-        self.simulate_model_bid(self.mcd, self.collateral, model, second_bid_price)
+        self.simulate_model_bid(
+            self.mcd, self.collateral, model, second_bid_price)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -529,7 +552,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         price_to_reach_tab = Wad(auction.tab / Rad(tend_lot)) + Wad(1)
-        self.simulate_model_bid(self.mcd, self.collateral, model, price_to_reach_tab)
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model, price_to_reach_tab)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -578,7 +602,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         bid_price = Wad.from_number(20.0)
-        reserve_dai(self.mcd, self.collateral, self.keeper_address, bid_price * tend_lot * 2)
+        reserve_dai(self.mcd, self.collateral,
+                    self.keeper_address, bid_price * tend_lot * 2)
         simulate_model_output(model=model, price=bid_price, gas_price=10)
         # and
         self.start_ignoring_transactions()
@@ -594,7 +619,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         wait_for_other_threads()
         # then
         assert flipper.bids(kick).bid == Rad(bid_price * tend_lot)
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == 15
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == 15
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -606,8 +632,10 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         flipper = self.collateral.flipper
 
         # when
-        reserve_dai(self.mcd, self.collateral, self.keeper_address, Wad.from_number(35.0) * tend_lot * 2)
-        simulate_model_output(model=model, price=Wad.from_number(15.0), gas_price=10)
+        reserve_dai(self.mcd, self.collateral, self.keeper_address,
+                    Wad.from_number(35.0) * tend_lot * 2)
+        simulate_model_output(
+            model=model, price=Wad.from_number(15.0), gas_price=10)
         # and
         self.start_ignoring_transactions()
         # and
@@ -616,13 +644,15 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         # and
         self.end_ignoring_transactions()
         # and
-        simulate_model_output(model=model, price=Wad.from_number(20.0), gas_price=15)
+        simulate_model_output(
+            model=model, price=Wad.from_number(20.0), gas_price=15)
         # and
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
         assert flipper.bids(kick).bid == Rad(Wad.from_number(20.0) * tend_lot)
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == 15
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == 15
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -638,8 +668,10 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         bid_price = Wad.from_number(20.0)
-        reserve_dai(self.mcd, self.collateral, self.keeper_address, bid_price * tend_lot)
-        simulate_model_output(model=model, price=Wad.from_number(20.0), gas_price=10)
+        reserve_dai(self.mcd, self.collateral,
+                    self.keeper_address, bid_price * tend_lot)
+        simulate_model_output(
+            model=model, price=Wad.from_number(20.0), gas_price=10)
         # and
         self.start_ignoring_transactions()
         # and
@@ -648,14 +680,16 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         # and
         self.end_ignoring_transactions()
         # and
-        simulate_model_output(model=model, price=Wad.from_number(15.0), gas_price=15)
+        simulate_model_output(
+            model=model, price=Wad.from_number(15.0), gas_price=15)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
         assert flipper.bids(kick).bid == Rad(Wad.from_number(15.0) * tend_lot)
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == 15
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == 15
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -674,16 +708,19 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
-        assert flipper.bids(kick_small_lot).bid == Rad(bid_price * tend_small_lot)
+        assert flipper.bids(kick_small_lot).bid == Rad(
+            bid_price * tend_small_lot)
 
         # when
-        tx_count = self.web3.eth.getTransactionCount(self.keeper_address.address)
+        tx_count = self.web3.eth.getTransactionCount(
+            self.keeper_address.address)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
-        assert self.web3.eth.getTransactionCount(self.keeper_address.address) == tx_count
+        assert self.web3.eth.getTransactionCount(
+            self.keeper_address.address) == tx_count
 
     def test_should_not_dent_on_rounding_errors_with_small_amounts(self):
         # given
@@ -703,13 +740,15 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         assert flipper.bids(kick_small_lot).lot == auction.lot
 
         # when
-        tx_count = self.web3.eth.getTransactionCount(self.keeper_address.address)
+        tx_count = self.web3.eth.getTransactionCount(
+            self.keeper_address.address)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
-        assert self.web3.eth.getTransactionCount(self.keeper_address.address) == tx_count
+        assert self.web3.eth.getTransactionCount(
+            self.keeper_address.address) == tx_count
 
     def test_should_deal_when_we_won_the_auction(self):
         # given
@@ -726,7 +765,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         # and
         self.keeper.check_all_auctions()
         wait_for_other_threads()
-        assert self.collateral.adapter.exit(self.keeper_address, lot_won).transact(from_address=self.keeper_address)
+        assert self.collateral.adapter.exit(self.keeper_address, lot_won).transact(
+            from_address=self.keeper_address)
         # then
         collateral_after = self.collateral.gem.balance_of(self.keeper_address)
         assert collateral_before < collateral_after
@@ -736,7 +776,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         flipper = self.collateral.flipper
         # and
         bid = Rad.from_number(66)
-        self.tend_with_dai(self.mcd, self.collateral, flipper, kick, other_address, bid)
+        self.tend_with_dai(self.mcd, self.collateral,
+                           flipper, kick, other_address, bid)
         assert flipper.bids(kick).bid == bid
 
         # when
@@ -756,14 +797,17 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         (model, model_factory) = models(self.keeper, kick)
 
         # when
-        self.simulate_model_bid(self.mcd, self.collateral, model, price=Wad.from_number(15.0), gas_price=175000)
+        self.simulate_model_bid(
+            self.mcd, self.collateral, model, price=Wad.from_number(15.0), gas_price=175000)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
-        assert self.collateral.flipper.bids(kick).bid == Rad(Wad.from_number(15.0) * tend_lot)
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == 175000
+        assert self.collateral.flipper.bids(kick).bid == Rad(
+            Wad.from_number(15.0) * tend_lot)
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == 175000
 
     def test_should_use_default_gas_price_if_not_provided_by_the_model(self, kick):
         # given
@@ -771,7 +815,8 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         (model, model_factory) = models(self.keeper, kick)
 
         # when
-        self.simulate_model_bid(self.mcd, self.collateral, model, price=Wad.from_number(16.0))
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model, price=Wad.from_number(16.0))
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -779,7 +824,7 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         # then
         assert flipper.bids(kick).bid == Rad(Wad.from_number(16.0) * tend_lot)
         assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == \
-               self.default_gas_price
+            self.default_gas_price
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -792,17 +837,20 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
         # when
         first_bid = Wad.from_number(3)
-        self.simulate_model_bid(self.mcd, self.collateral, model=model, price=first_bid, gas_price=2000)
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model=model, price=first_bid, gas_price=2000)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == 2000
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == 2000
 
         # when
         second_bid = Wad.from_number(6)
-        self.simulate_model_bid(self.mcd, self.collateral, model=model, price=second_bid)
+        self.simulate_model_bid(self.mcd, self.collateral,
+                                model=model, price=second_bid)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
@@ -810,19 +858,21 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
         # then
         assert flipper.bids(kick).bid == Rad(second_bid * tend_lot)
         assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == \
-               self.default_gas_price
+            self.default_gas_price
 
         # when
         third_bid = Wad.from_number(9)
         new_gas_price = int(self.default_gas_price*1.25)
-        self.simulate_model_bid(self.mcd, self.collateral, model=model, price=third_bid, gas_price=new_gas_price)
+        self.simulate_model_bid(
+            self.mcd, self.collateral, model=model, price=third_bid, gas_price=new_gas_price)
         # and
         self.keeper.check_all_auctions()
         self.keeper.check_for_bids()
         wait_for_other_threads()
         # then
         assert flipper.bids(kick).bid == Rad(third_bid * tend_lot)
-        assert self.web3.eth.getBlock('latest', full_transactions=True).transactions[0].gasPrice == new_gas_price
+        assert self.web3.eth.getBlock(
+            'latest', full_transactions=True).transactions[0].gasPrice == new_gas_price
 
         # cleanup
         time_travel_by(self.web3, flipper.ttl() + 1)
@@ -830,4 +880,5 @@ class TestAuctionKeeperFlipper(TransactionIgnoringTest):
 
     @classmethod
     def teardown_class(cls):
-        flog_and_heal(web3(), mcd(web3()), past_blocks=1200, require_heal=False)
+        flog_and_heal(web3(), mcd(web3()),
+                      past_blocks=1200, require_heal=False)

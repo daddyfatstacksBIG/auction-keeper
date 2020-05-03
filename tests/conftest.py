@@ -94,8 +94,10 @@ def mint_mkr(mkr: DSToken, recipient_address: Address, amount: Wad):
     deployment_address = Address("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
     assert mkr.mint(amount).transact(from_address=deployment_address)
     assert mkr.balance_of(deployment_address) > Wad(0)
-    assert mkr.approve(recipient_address).transact(from_address=deployment_address)
-    assert mkr.transfer(recipient_address, amount).transact(from_address=deployment_address)
+    assert mkr.approve(recipient_address).transact(
+        from_address=deployment_address)
+    assert mkr.transfer(recipient_address, amount).transact(
+        from_address=deployment_address)
 
 
 @pytest.fixture(scope="session")
@@ -123,8 +125,10 @@ def set_collateral_price(mcd: DssDeployment, collateral: Collateral, price: Wad)
     assert isinstance(pip, DSValue)
 
     print(f"Changing price of {collateral.ilk.name} to {price}")
-    assert pip.poke_with_int(price.value).transact(from_address=pip.get_owner())
-    assert mcd.spotter.poke(ilk=collateral.ilk).transact(from_address=pip.get_owner())
+    assert pip.poke_with_int(price.value).transact(
+        from_address=pip.get_owner())
+    assert mcd.spotter.poke(ilk=collateral.ilk).transact(
+        from_address=pip.get_owner())
 
     assert get_collateral_price(collateral) == price
 
@@ -157,7 +161,8 @@ def max_dart(mcd: DssDeployment, collateral: Collateral, our_address: Address) -
 
     # ensure we've met the dust cutoff
     if Rad(urn.art + dart) < ilk.dust:
-        print(f"max_dart is being bumped from {urn.art + dart} to {ilk.dust} to reach dust cutoff")
+        print(
+            f"max_dart is being bumped from {urn.art + dart} to {ilk.dust} to reach dust cutoff")
         dart = Wad(ilk.dust)
 
     assert dart > Wad(0)
@@ -176,13 +181,16 @@ def reserve_dai(mcd: DssDeployment, c: Collateral, usr: Address, amount: Wad, ex
     rate = ilk.rate  # Ray
     spot = ilk.spot  # Ray
     assert rate >= Ray.from_number(1)
-    collateral_required = Wad((Ray(amount) / spot) * rate) * extra_collateral + Wad(1)
-    print(f'collateral_required for {str(amount)} dai is {str(collateral_required)}')
+    collateral_required = Wad(
+        (Ray(amount) / spot) * rate) * extra_collateral + Wad(1)
+    print(
+        f'collateral_required for {str(amount)} dai is {str(collateral_required)}')
 
     wrap_eth(mcd, usr, collateral_required)
     c.approve(usr)
     assert c.adapter.join(usr, collateral_required).transact(from_address=usr)
-    assert mcd.vat.frob(c.ilk, usr, collateral_required, amount).transact(from_address=usr)
+    assert mcd.vat.frob(c.ilk, usr, collateral_required,
+                        amount).transact(from_address=usr)
     assert mcd.vat.urn(c.ilk, usr).art >= Wad(amount)
 
 
@@ -196,7 +204,8 @@ def purchase_dai(amount: Wad, recipient: Address):
     m.approve_dai(seller)
     m.approve_dai(recipient)
     assert m.dai_adapter.exit(seller, amount).transact(from_address=seller)
-    assert m.dai.transfer_from(seller, recipient, amount).transact(from_address=seller)
+    assert m.dai.transfer_from(
+        seller, recipient, amount).transact(from_address=seller)
 
 
 def is_cdp_safe(ilk: Ilk, urn: Urn) -> bool:
@@ -228,7 +237,8 @@ def create_risky_cdp(mcd: DssDeployment, c: Collateral, collateral_amount: Wad, 
     if dink > Wad(0):
         vat_balance = mcd.vat.gem(c.ilk, gal_address)
         balance = token.normalize_amount(c.gem.balance_of(gal_address))
-        print(f"before join: dink={dink} vat_balance={vat_balance} balance={balance} vat_gap={dink - vat_balance}")
+        print(
+            f"before join: dink={dink} vat_balance={vat_balance} balance={balance} vat_gap={dink - vat_balance}")
         if vat_balance < dink:
             vat_gap = dink - vat_balance
             if balance < vat_gap:
@@ -237,25 +247,31 @@ def create_risky_cdp(mcd: DssDeployment, c: Collateral, collateral_amount: Wad, 
                 else:
                     raise RuntimeError("Insufficient collateral balance")
             amount_to_join = token.unnormalize_amount(vat_gap)
-            if amount_to_join == Wad(0):  # handle dusty balances with non-18-decimal tokens
+            # handle dusty balances with non-18-decimal tokens
+            if amount_to_join == Wad(0):
                 amount_to_join += token.min_amount
-            assert c.adapter.join(gal_address, amount_to_join).transact(from_address=gal_address)
+            assert c.adapter.join(gal_address, amount_to_join).transact(
+                from_address=gal_address)
         vat_balance = mcd.vat.gem(c.ilk, gal_address)
-        print(f"after join: dink={dink} vat_balance={vat_balance} balance={balance} vat_gap={dink - vat_balance}")
+        print(
+            f"after join: dink={dink} vat_balance={vat_balance} balance={balance} vat_gap={dink - vat_balance}")
         assert vat_balance >= dink
-        assert mcd.vat.frob(c.ilk, gal_address, dink, Wad(0)).transact(from_address=gal_address)
+        assert mcd.vat.frob(c.ilk, gal_address, dink, Wad(
+            0)).transact(from_address=gal_address)
 
     # Put gal CDP at max possible debt
     dart = max_dart(mcd, c, gal_address) - Wad(1)
     if dart > Wad(0):
         print(f"Attempting to frob with dart={dart}")
-        assert mcd.vat.frob(c.ilk, gal_address, Wad(0), dart).transact(from_address=gal_address)
+        assert mcd.vat.frob(c.ilk, gal_address, Wad(
+            0), dart).transact(from_address=gal_address)
 
     # Draw our Dai, simulating the usual behavior
     urn = mcd.vat.urn(c.ilk, gal_address)
     if draw_dai and urn.art > Wad(0):
         mcd.approve_dai(gal_address)
-        assert mcd.dai_adapter.exit(gal_address, urn.art).transact(from_address=gal_address)
+        assert mcd.dai_adapter.exit(gal_address, urn.art).transact(
+            from_address=gal_address)
         print(f"Exited {urn.art} Dai from urn")
 
 
@@ -295,9 +311,10 @@ def create_cdp_with_surplus(mcd: DssDeployment, c: Collateral, gal_address: Addr
         from_address=gal_address)
     assert mcd.jug.drip(c.ilk).transact(from_address=gal_address)
     # total surplus > total debt + surplus auction lot size + surplus buffer
-    print(f"dai(vow)={str(mcd.vat.dai(mcd.vow.address))} >? sin(vow)={str(mcd.vat.sin(mcd.vow.address))} " 
+    print(f"dai(vow)={str(mcd.vat.dai(mcd.vow.address))} >? sin(vow)={str(mcd.vat.sin(mcd.vow.address))} "
           f"+ vow.bump={str(mcd.vow.bump())} + vow.hump={str(mcd.vow.hump())}")
-    assert mcd.vat.dai(mcd.vow.address) > mcd.vat.sin(mcd.vow.address) + mcd.vow.bump() + mcd.vow.hump()
+    assert mcd.vat.dai(mcd.vow.address) > mcd.vat.sin(
+        mcd.vow.address) + mcd.vow.bump() + mcd.vow.hump()
     return mcd.vat.urn(c.ilk, gal_address)
 
 
@@ -353,4 +370,5 @@ def models(keeper: AuctionKeeper, id: int):
 def simulate_model_output(model: object, price: Wad, gas_price: Optional[int] = None):
     assert (isinstance(price, Wad))
     assert (isinstance(gas_price, int)) or gas_price is None
-    model.get_stance = MagicMock(return_value=Stance(price=price, gas_price=gas_price))
+    model.get_stance = MagicMock(
+        return_value=Stance(price=price, gas_price=gas_price))

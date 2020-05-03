@@ -40,7 +40,8 @@ class Auction:
         self.transactions.append(transact)
 
     def transaction_in_progress(self) -> Optional[Transact]:
-        self.transactions = list(filter(lambda transact: transact.status != TransactStatus.FINISHED, self.transactions))
+        self.transactions = list(filter(
+            lambda transact: transact.status != TransactStatus.FINISHED, self.transactions))
 
         if len(self.transactions) > 0:
             return self.transactions[-1]
@@ -69,10 +70,12 @@ class Auction:
                 else:
                     self.logger.debug(f"Model supplied gas price {model_output.gas_price}, "
                                       f"switching to UpdatableGasPrice for auction {id}")
-                    new_gas_strategy = UpdatableGasPrice(model_output.gas_price)
+                    new_gas_strategy = UpdatableGasPrice(
+                        model_output.gas_price)
             # ...and the model stopped supplying gas price
             elif not model_output.gas_price and isinstance(self.gas_price, UpdatableGasPrice):
-                self.logger.debug(f"Model did not supply gas price; switching to keeper gas strategy for auction {id}")
+                self.logger.debug(
+                    f"Model did not supply gas price; switching to keeper gas strategy for auction {id}")
                 new_gas_strategy = keeper_gas_price
         # ...else create the gas strategy relevant to the model
         else:
@@ -83,7 +86,8 @@ class Auction:
                 new_gas_strategy = UpdatableGasPrice(model_output.gas_price)
             # use the keeper's configured gas strategy for the auction
             else:
-                self.logger.debug("Model did not supply gas price; using keeper gas strategy")
+                self.logger.debug(
+                    "Model did not supply gas price; using keeper gas strategy")
                 new_gas_strategy = keeper_gas_price
 
         return new_gas_strategy, fixed_gas_price_changed
@@ -97,7 +101,8 @@ class Auctions:
         assert isinstance(flipper, Address) or (flipper is None)
         assert isinstance(flapper, Address) or (flapper is None)
         assert isinstance(flopper, Address) or (flopper is None)
-        assert isinstance(flipper, Address) or isinstance(flapper, Address) or isinstance(flopper, Address)
+        assert isinstance(flipper, Address) or isinstance(
+            flapper, Address) or isinstance(flopper, Address)
         assert isinstance(model_factory, ModelFactory)
 
         self.auctions = {}
@@ -141,7 +146,8 @@ class Auctions:
             del self.auctions[id]
 
             # Log the fact that auction has been discarded
-            self.logger.info(f"Stopped monitoring auction #{id} as it's not active anymore")
+            self.logger.info(
+                f"Stopped monitoring auction #{id} as it's not active anymore")
 
     def __del__(self):
         count = len(self.auctions)

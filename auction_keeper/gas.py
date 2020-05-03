@@ -45,11 +45,13 @@ class DynamicGasPrice(GasPrice):
         self.gas_station = None
         self.fixed_gas = None
         if arguments.ethgasstation_api_key:
-            self.gas_station = EthGasStation(refresh_interval=60, expiry=600, api_key=arguments.ethgasstation_api_key)
+            self.gas_station = EthGasStation(
+                refresh_interval=60, expiry=600, api_key=arguments.ethgasstation_api_key)
         elif arguments.etherchain_gas:
             self.gas_station = EtherchainOrg(refresh_interval=60, expiry=600)
         elif arguments.poanetwork_gas:
-            self.gas_station = POANetwork(refresh_interval=60, expiry=600, alt_url=arguments.poanetwork_url)
+            self.gas_station = POANetwork(
+                refresh_interval=60, expiry=600, alt_url=arguments.poanetwork_url)
         elif arguments.fixed_gas_price:
             self.fixed_gas = int(round(arguments.fixed_gas_price * self.GWEI))
         self.initial_multiplier = arguments.gas_initial_multiplier

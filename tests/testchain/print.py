@@ -43,7 +43,7 @@ def print_balances():
     print(f"joy={str(joy)[:6]}, awe={str(awe)[:9]}, woe={str(woe)[:9]}, "
           f"Sin={str(mcd.vow.sin())[:9]}, Ash={str(mcd.vow.ash())[:9]}, "
           f"debt={str(mcd.vat.debt())[:9]}, vice={str(mcd.vat.vice())[:9]}")
-          #f"bump={str(mcd.vow.bump())[:9]}, sump={str(mcd.vow.sump())[:9]}")
+    # f"bump={str(mcd.vow.bump())[:9]}, sump={str(mcd.vow.sump())[:9]}")
 
 
 def print_auctions():
@@ -56,8 +56,11 @@ def print_missed_flops():
         auction = mcd.flopper.bids(i)
         if auction.bid != Rad(0):
             total += 1
-            print(f"id={i}, bid={auction.bid}, lot={auction.lot}, guy={auction.guy}")
-    print(f"{total} flops were missed, accounting for {str(mcd.vow.sump()*total)[:9]} Dai in debt")
+            print(
+                f"id={i}, bid={auction.bid}, lot={auction.lot}, guy={auction.guy}")
+    print(
+        f"{total} flops were missed, accounting for {str(mcd.vow.sump()*total)[:9]} Dai in debt")
+
 
 if arguments.balances:
     print_balances()

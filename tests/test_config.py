@@ -43,7 +43,8 @@ class TestTransactionMocking(TransactionIgnoringTest):
         self.ilk = self.collateral.ilk
 
     def test_empty_tx(self):
-        empty_tx = Transact(self, self.web3, None, self.keeper_address, None, None, [self.keeper_address, Wad(0)])
+        empty_tx = Transact(self, self.web3, None, self.keeper_address, None, None, [
+                            self.keeper_address, Wad(0)])
         empty_tx.transact()
 
     @pytest.mark.timeout(15)
@@ -51,7 +52,8 @@ class TestTransactionMocking(TransactionIgnoringTest):
         balance_before = self.mcd.vat.gem(self.ilk, self.keeper_address)
 
         self.start_ignoring_sync_transactions()
-        assert self.collateral.adapter.join(self.keeper_address, Wad.from_number(0.2)).transact()
+        assert self.collateral.adapter.join(
+            self.keeper_address, Wad.from_number(0.2)).transact()
         self.end_ignoring_sync_transactions()
 
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
@@ -128,14 +130,16 @@ class TestTransactionMocking(TransactionIgnoringTest):
     def check_sync_transaction_still_works(self):
         balance_before = self.mcd.vat.gem(self.ilk, self.keeper_address)
         amount = Wad.from_number(0.01)
-        assert self.collateral.adapter.join(self.keeper_address, amount).transact()
+        assert self.collateral.adapter.join(
+            self.keeper_address, amount).transact()
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
         assert balance_before + amount == balance_after
 
     def check_async_transaction_still_works(self):
         balance_before = self.mcd.vat.gem(self.ilk, self.keeper_address)
         amount = Wad.from_number(0.01)
-        AuctionKeeper._run_future(self.collateral.adapter.exit(self.keeper_address, amount).transact_async())
+        AuctionKeeper._run_future(self.collateral.adapter.exit(
+            self.keeper_address, amount).transact_async())
         wait_for_other_threads()
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
         assert balance_before - amount == balance_after

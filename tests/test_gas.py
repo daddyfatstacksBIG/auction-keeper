@@ -29,6 +29,7 @@ GWEI = 1000000000
 default_initial_gas = 10
 default_max_gas = 5000
 
+
 class TestGasStrategy:
 
     def test_ethgasstation(self, mcd, keeper_address):
@@ -88,9 +89,12 @@ class TestGasStrategy:
         assert keeper.gas_price.gas_maximum == default_max_gas * GWEI
 
         assert keeper.gas_price.get_gas_price(0) == default_initial_gas * GWEI
-        assert keeper.gas_price.get_gas_price(31) == default_initial_gas * GWEI * 2.25
-        assert keeper.gas_price.get_gas_price(61) == default_initial_gas * GWEI * 2.25 ** 2
-        assert keeper.gas_price.get_gas_price(91) == default_initial_gas * GWEI * 2.25 ** 3
+        assert keeper.gas_price.get_gas_price(
+            31) == default_initial_gas * GWEI * 2.25
+        assert keeper.gas_price.get_gas_price(
+            61) == default_initial_gas * GWEI * 2.25 ** 2
+        assert keeper.gas_price.get_gas_price(
+            91) == default_initial_gas * GWEI * 2.25 ** 3
         assert keeper.gas_price.get_gas_price(30*80) == default_max_gas * GWEI
 
     def test_no_api_non_fixed(self, mcd, keeper_address):
@@ -106,9 +110,12 @@ class TestGasStrategy:
                                          f"--model ./bogus-model.sh"), web3=mcd.web3)
         initial_amount = default_initial_gas * GWEI
         assert keeper.gas_price.get_gas_price(0) == initial_amount
-        assert keeper.gas_price.get_gas_price(31) == initial_amount * reactive_multipler
-        assert keeper.gas_price.get_gas_price(61) == initial_amount * reactive_multipler ** 2
-        assert keeper.gas_price.get_gas_price(91) == initial_amount * reactive_multipler ** 3
+        assert keeper.gas_price.get_gas_price(
+            31) == initial_amount * reactive_multipler
+        assert keeper.gas_price.get_gas_price(
+            61) == initial_amount * reactive_multipler ** 2
+        assert keeper.gas_price.get_gas_price(
+            91) == initial_amount * reactive_multipler ** 3
         assert keeper.gas_price.get_gas_price(30*12) == default_max_gas * GWEI
 
     def test_fixed_with_explicit_max(self, web3, keeper_address):
@@ -132,13 +139,13 @@ class TestGasStrategy:
     def test_config_negative(self, web3, keeper_address):
         with pytest.raises(SystemExit):
             missing_arg = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                                   f"--type flop --from-block 1 "
-                                                   f"--gas-reactive-multiplier "
-                                                   f"--model ./bogus-model.sh"), web3=web3)
+                                                  f"--type flop --from-block 1 "
+                                                  f"--gas-reactive-multiplier "
+                                                  f"--model ./bogus-model.sh"), web3=web3)
 
         with pytest.raises(SystemExit):
             conflicting_args = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                                   f"--type flop --from-block 1 "
-                                                   f"--etherchain-gas-price "
-                                                   f"--poanetwork-gas-price "
-                                                   f"--model ./bogus-model.sh"), web3=web3)
+                                                       f"--type flop --from-block 1 "
+                                                       f"--etherchain-gas-price "
+                                                       f"--poanetwork-gas-price "
+                                                       f"--model ./bogus-model.sh"), web3=web3)

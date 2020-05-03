@@ -23,12 +23,15 @@ from tests.conftest import create_unsafe_cdp, is_cdp_safe, mcd, gal_address, web
 mcd = mcd(web3())
 address = gal_address(web3())
 
-collateral_amount = Wad.from_number(float(sys.argv[1])) if len(sys.argv) > 1 else 1.0
-collateral = mcd.collaterals[str(sys.argv[2])] if len(sys.argv) > 2 else mcd.collaterals['ETH-C']
+collateral_amount = Wad.from_number(
+    float(sys.argv[1])) if len(sys.argv) > 1 else 1.0
+collateral = mcd.collaterals[str(sys.argv[2])] if len(
+    sys.argv) > 2 else mcd.collaterals['ETH-C']
 urn = mcd.vat.urn(collateral.ilk, address)
 
 if not is_cdp_safe(mcd.vat.ilk(collateral.ilk.name), urn):
     print("CDP is already unsafe; no action taken")
 else:
-    create_unsafe_cdp(mcd, collateral, Wad.from_number(collateral_amount), address, False)
+    create_unsafe_cdp(mcd, collateral, Wad.from_number(
+        collateral_amount), address, False)
     print("Created unsafe CDP")
