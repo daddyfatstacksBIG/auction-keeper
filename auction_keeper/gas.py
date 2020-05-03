@@ -46,12 +46,14 @@ class DynamicGasPrice(GasPrice):
         self.fixed_gas = None
         if arguments.ethgasstation_api_key:
             self.gas_station = EthGasStation(
-                refresh_interval=60, expiry=600, api_key=arguments.ethgasstation_api_key)
+                refresh_interval=60, expiry=600, api_key=arguments.ethgasstation_api_key
+            )
         elif arguments.etherchain_gas:
             self.gas_station = EtherchainOrg(refresh_interval=60, expiry=600)
         elif arguments.poanetwork_gas:
             self.gas_station = POANetwork(
-                refresh_interval=60, expiry=600, alt_url=arguments.poanetwork_url)
+                refresh_interval=60, expiry=600, alt_url=arguments.poanetwork_url
+            )
         elif arguments.fixed_gas_price:
             self.fixed_gas = int(round(arguments.fixed_gas_price * self.GWEI))
         self.initial_multiplier = arguments.gas_initial_multiplier
@@ -71,10 +73,12 @@ class DynamicGasPrice(GasPrice):
         else:
             initial_price = int(round(fast_price * self.initial_multiplier))
 
-        return GeometricGasPrice(initial_price=initial_price,
-                                 every_secs=30,
-                                 coefficient=self.reactive_multiplier,
-                                 max_price=self.gas_maximum).get_gas_price(time_elapsed)
+        return GeometricGasPrice(
+            initial_price=initial_price,
+            every_secs=30,
+            coefficient=self.reactive_multiplier,
+            max_price=self.gas_maximum,
+        ).get_gas_price(time_elapsed)
 
     def __str__(self):
         retval = ""
@@ -85,8 +89,10 @@ class DynamicGasPrice(GasPrice):
         else:
             retval = f"Default gas 10 Gwei "
 
-        retval += f"and will multiply by {self.reactive_multiplier} every 30s to a maximum of " \
-                  f"{round(self.gas_maximum / self.GWEI, 1)} Gwei"
+        retval += (
+            f"and will multiply by {self.reactive_multiplier} every 30s to a maximum of "
+            f"{round(self.gas_maximum / self.GWEI, 1)} Gwei"
+        )
         return retval
 
     def __repr__(self):

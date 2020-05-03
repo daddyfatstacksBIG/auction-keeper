@@ -46,15 +46,16 @@ def captured_output():
 
 
 def time_travel_by(web3: Web3, seconds: int):
-    assert(isinstance(web3, Web3))
-    assert(isinstance(seconds, int))
+    assert isinstance(web3, Web3)
+    assert isinstance(seconds, int)
 
     if "parity" in web3.clientVersion.lower():
         print(f"time travel unsupported by parity; waiting {seconds} seconds")
         time.sleep(seconds)
         # force a block mining to have a correct timestamp in latest block
         web3.eth.sendTransaction(
-            {'from': web3.eth.accounts[0], 'to': web3.eth.accounts[1], 'value': 1})
+            {"from": web3.eth.accounts[0], "to": web3.eth.accounts[1], "value": 1}
+        )
     else:
         web3.manager.request_blocking("evm_increaseTime", [seconds])
         # force a block mining to have a correct timestamp in latest block
@@ -69,11 +70,13 @@ def wait_for_other_threads():
 class TransactionIgnoringTest:
     class MockReceipt(Receipt):
         def __init__(self):
-            super().__init__({
-                'transactionHash': '0xaaaaaaaaaabbbbbbbbbbccccccccccdddddddddd',
-                'gasUsed': 12345,
-                'logs': []
-            })
+            super().__init__(
+                {
+                    "transactionHash": "0xaaaaaaaaaabbbbbbbbbbccccccccccdddddddddd",
+                    "gasUsed": 12345,
+                    "logs": [],
+                }
+            )
             self.successful = True
 
     def start_ignoring_transactions(self):
@@ -82,29 +85,35 @@ class TransactionIgnoringTest:
         self.original_get_transaction = self.web3.eth.getTransaction
         self.original_tx_count = self.web3.eth.getTransactionCount
         self.original_nonce = self.web3.eth.getTransactionCount(
-            self.keeper_address.address)
+            self.keeper_address.address
+        )
 
         self.web3.eth.sendTransaction = MagicMock(
-            return_value='0xaaaaaaaaaabbbbbbbbbbccccccccccdddddddddd')
+            return_value="0xaaaaaaaaaabbbbbbbbbbccccccccccdddddddddd"
+        )
         self.web3.eth.getTransaction = MagicMock(
-            return_value={'nonce': self.original_nonce})
+            return_value={"nonce": self.original_nonce}
+        )
         self.web3.eth.getTransactionCount = MagicMock(return_value=0)
 
         logging.debug(
-            f"Started ignoring async transactions at nonce {self.original_nonce}")
+            f"Started ignoring async transactions at nonce {self.original_nonce}"
+        )
 
     def end_ignoring_transactions(self, ensure_next_tx_is_replacement=True):
         """ Stops trapping an async tx, with a facility to ensure the next tx is a replacement (where desired) """
+
         def second_send_transaction(transaction):
             # Ensure the second transaction gets sent with the same nonce, replacing the first transaction.
-            assert transaction['nonce'] == self.original_nonce
+            assert transaction["nonce"] == self.original_nonce
             # Restore original behavior for the third transaction.
             self.web3.eth.sendTransaction = self.original_send_transaction
 
             # TestRPC doesn't support `sendTransaction` calls with the `nonce` parameter
             # (unlike proper Ethereum nodes which handle it very well)
             transaction_without_nonce = {
-                key: transaction[key] for key in transaction if key != 'nonce'}
+                key: transaction[key] for key in transaction if key != "nonce"
+            }
             return self.original_send_transaction(transaction_without_nonce)
 
         # Give the previous Transact a chance to enter its event loop
@@ -112,7 +121,8 @@ class TransactionIgnoringTest:
 
         if ensure_next_tx_is_replacement:
             self.web3.eth.sendTransaction = MagicMock(
-                side_effect=second_send_transaction)
+                side_effect=second_send_transaction
+            )
         else:
             self.web3.eth.sendTransaction = self.original_send_transaction
         self.web3.eth.getTransaction = self.original_get_transaction
@@ -127,9 +137,11 @@ class TransactionIgnoringTest:
         self.original_func = Transact._func
 
         Transact._get_receipt = MagicMock(
-            return_value=TransactionIgnoringTest.MockReceipt())
+            return_value=TransactionIgnoringTest.MockReceipt()
+        )
         Transact._func = MagicMock(
-            return_value='0xccccccccccddddddddddaaaaaaaaaabbbbbbbbbb')
+            return_value="0xccccccccccddddddddddaaaaaaaaaabbbbbbbbbb"
+        )
         self.web3.eth.getTransactionCount = MagicMock(return_value=9999999999)
         logging.debug("Started ignoring sync transactions")
 

@@ -37,14 +37,21 @@ class TestTransactionMocking(TransactionIgnoringTest):
         self.mcd = mcd(self.web3)
         self.keeper_address = keeper_address(self.mcd.web3)
         self.web3.eth.defaultAccount = self.keeper_address.address
-        self.collateral = self.mcd.collaterals['ETH-A']
+        self.collateral = self.mcd.collaterals["ETH-A"]
         self.collateral.approve(self.keeper_address)
         assert self.collateral.gem.deposit(Wad.from_number(1)).transact()
         self.ilk = self.collateral.ilk
 
     def test_empty_tx(self):
-        empty_tx = Transact(self, self.web3, None, self.keeper_address, None, None, [
-                            self.keeper_address, Wad(0)])
+        empty_tx = Transact(
+            self,
+            self.web3,
+            None,
+            self.keeper_address,
+            None,
+            None,
+            [self.keeper_address, Wad(0)],
+        )
         empty_tx.transact()
 
     @pytest.mark.timeout(15)
@@ -53,7 +60,8 @@ class TestTransactionMocking(TransactionIgnoringTest):
 
         self.start_ignoring_sync_transactions()
         assert self.collateral.adapter.join(
-            self.keeper_address, Wad.from_number(0.2)).transact()
+            self.keeper_address, Wad.from_number(0.2)
+        ).transact()
         self.end_ignoring_sync_transactions()
 
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
@@ -130,16 +138,16 @@ class TestTransactionMocking(TransactionIgnoringTest):
     def check_sync_transaction_still_works(self):
         balance_before = self.mcd.vat.gem(self.ilk, self.keeper_address)
         amount = Wad.from_number(0.01)
-        assert self.collateral.adapter.join(
-            self.keeper_address, amount).transact()
+        assert self.collateral.adapter.join(self.keeper_address, amount).transact()
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
         assert balance_before + amount == balance_after
 
     def check_async_transaction_still_works(self):
         balance_before = self.mcd.vat.gem(self.ilk, self.keeper_address)
         amount = Wad.from_number(0.01)
-        AuctionKeeper._run_future(self.collateral.adapter.exit(
-            self.keeper_address, amount).transact_async())
+        AuctionKeeper._run_future(
+            self.collateral.adapter.exit(self.keeper_address, amount).transact_async()
+        )
         wait_for_other_threads()
         balance_after = self.mcd.vat.gem(self.ilk, self.keeper_address)
         assert balance_before - amount == balance_after
@@ -147,15 +155,20 @@ class TestTransactionMocking(TransactionIgnoringTest):
 
 class TestConfig:
     def test_flip_keeper(self, web3, keeper_address: Address):
-        keeper = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                         f"--type flip "
-                                         f"--from-block 1 "
-                                         f"--ilk USDC-A "
-                                         f"--model ./bogus-model.sh"), web3=web3)
+        keeper = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flip "
+                f"--from-block 1 "
+                f"--ilk USDC-A "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
 
         assert isinstance(keeper.flipper, Flipper)
         assert keeper.collateral.flipper == keeper.flipper
-        assert keeper.collateral.ilk.name == 'USDC-A'
+        assert keeper.collateral.ilk.name == "USDC-A"
         assert keeper.flapper is None
         assert keeper.flopper is None
         assert isinstance(keeper.cat, Cat)
@@ -164,17 +177,27 @@ class TestConfig:
 
     def test_flip_keeper_negative(self, web3, keeper_address: Address):
         with pytest.raises(RuntimeError) as e:
-            AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                    f"--type flip "
-                                    f"--from-block 1 "
-                                    f"--model ./bogus-model.sh"), web3=web3)
+            AuctionKeeper(
+                args=args(
+                    f"--eth-from {keeper_address} "
+                    f"--type flip "
+                    f"--from-block 1 "
+                    f"--model ./bogus-model.sh"
+                ),
+                web3=web3,
+            )
         assert "ilk" in str(e)
 
     def test_flap_keeper(self, web3, keeper_address: Address):
-        keeper = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                         f"--type flap "
-                                         f"--from-block 1 "
-                                         f"--model ./bogus-model.sh"), web3=web3)
+        keeper = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flap "
+                f"--from-block 1 "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
 
         assert isinstance(keeper.flapper, Flapper)
         assert isinstance(keeper.dai_join, DaiJoin)
@@ -184,14 +207,20 @@ class TestConfig:
 
     def test_flap_keeper_negative(self, web3, keeper_address: Address):
         with pytest.raises(SystemExit) as e:
-            AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                    f"--type flap"), web3=web3)
+            AuctionKeeper(
+                args=args(f"--eth-from {keeper_address} " f"--type flap"), web3=web3
+            )
 
     def test_flop_keeper(self, web3, keeper_address: Address):
-        keeper = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                         f"--type flop "
-                                         f"--from-block 1 "
-                                         f"--model ./bogus-model.sh"), web3=web3)
+        keeper = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flop "
+                f"--from-block 1 "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
 
         assert isinstance(keeper.flopper, Flopper)
         assert isinstance(keeper.dai_join, DaiJoin)
@@ -201,17 +230,27 @@ class TestConfig:
 
     def test_flop_keeper_negative(self, web3, keeper_address: Address):
         with pytest.raises(RuntimeError) as e:
-            AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                    f"--type flop "
-                                    f"--model ./bogus-model.sh"), web3=web3)
+            AuctionKeeper(
+                args=args(
+                    f"--eth-from {keeper_address} "
+                    f"--type flop "
+                    f"--model ./bogus-model.sh"
+                ),
+                web3=web3,
+            )
 
     def create_sharded_keeper(self, web3, keeper_address: Address, shard: int):
-        return AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                       f"--type flip "
-                                       f"--from-block 1 "
-                                       f"--ilk ETH-B "
-                                       f"--shards 3 --shard-id {shard} "
-                                       f"--model ./bogus-model.sh"), web3=web3)
+        return AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flip "
+                f"--from-block 1 "
+                f"--ilk ETH-B "
+                f"--shards 3 --shard-id {shard} "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
 
     def test_sharding(self, web3, keeper_address: Address):
         keeper0 = self.create_sharded_keeper(web3, keeper_address, 0)
@@ -234,36 +273,58 @@ class TestConfig:
         assert handled0 + handled1 + handled2 == auction_count
 
     def test_deal_list(self, web3, keeper_address: Address):
-        accounts = ["0x40418beb7f24c87ab2d5ffb8404665414e91d858",
-                    "0x4A8638b3788c554563Ef2444f86F943ab0Cd9761",
-                    "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674"]
+        accounts = [
+            "0x40418beb7f24c87ab2d5ffb8404665414e91d858",
+            "0x4A8638b3788c554563Ef2444f86F943ab0Cd9761",
+            "0xdb33dfd3d61308c33c63209845dad3e6bfb2c674",
+        ]
 
-        default_behavior = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                                   f"--type flip --from-block 1 "
-                                                   f"--ilk ETH-B "
-                                                   f"--model ./bogus-model.sh"), web3=web3)
+        default_behavior = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flip --from-block 1 "
+                f"--ilk ETH-B "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
         assert 1 == len(default_behavior.deal_for)
         assert keeper_address == list(default_behavior.deal_for)[0]
         assert not default_behavior.deal_all
 
-        deal_for_3_accounts = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                                      f"--type flap --from-block 1 "
-                                                      f"--deal-for {accounts[0]} {accounts[1]} {accounts[2]} "
-                                                      f"--model ./bogus-model.sh"), web3=web3)
+        deal_for_3_accounts = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flap --from-block 1 "
+                f"--deal-for {accounts[0]} {accounts[1]} {accounts[2]} "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
         assert 3 == len(deal_for_3_accounts.deal_for)
         for account in accounts:
             assert Address(account) in deal_for_3_accounts.deal_for
         assert not deal_for_3_accounts.deal_all
 
-        disable_deal = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                               f"--type flop --from-block 1 "
-                                               f"--deal-for NONE "
-                                               f"--model ./bogus-model.sh"), web3=web3)
+        disable_deal = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flop --from-block 1 "
+                f"--deal-for NONE "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
         assert 0 == len(disable_deal.deal_for)
         assert not disable_deal.deal_all
 
-        deal_all = AuctionKeeper(args=args(f"--eth-from {keeper_address} "
-                                           f"--type flop --from-block 1 "
-                                           f"--deal-for ALL "
-                                           f"--model ./bogus-model.sh"), web3=web3)
+        deal_all = AuctionKeeper(
+            args=args(
+                f"--eth-from {keeper_address} "
+                f"--type flop --from-block 1 "
+                f"--deal-for ALL "
+                f"--model ./bogus-model.sh"
+            ),
+            web3=web3,
+        )
         assert deal_all.deal_all

@@ -26,7 +26,7 @@ address = gal_address(web3())
 
 
 def create_cdp_with_surplus():
-    c = mcd.collaterals['ETH-A']
+    c = mcd.collaterals["ETH-A"]
     ilk = mcd.vat.ilk(c.ilk.name)
     dink = Wad.from_number(float(sys.argv[1]))
 
@@ -35,8 +35,9 @@ def create_cdp_with_surplus():
     assert c.adapter.join(address, dink).transact(from_address=address)
 
     dart = (dink * Wad(ilk.spot)) * Wad.from_number(0.99)
-    assert mcd.vat.frob(c.ilk, address, dink=dink,
-                        dart=dart).transact(from_address=address)
+    assert mcd.vat.frob(c.ilk, address, dink=dink, dart=dart).transact(
+        from_address=address
+    )
 
     assert mcd.jug.drip(c.ilk).transact(from_address=address)
 

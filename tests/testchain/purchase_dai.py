@@ -21,7 +21,7 @@ from pymaker.numeric import Wad, Ray, Rad
 from tests.conftest import keeper_address, mcd, other_address, reserve_dai, web3
 
 mcd = mcd(web3())
-collateral = mcd.collaterals['ETH-C']
+collateral = mcd.collaterals["ETH-C"]
 keeper_address = keeper_address(web3())
 seller = other_address(web3())
 
@@ -32,9 +32,11 @@ web3().eth.defaultAccount = seller.address
 collateral.approve(seller)
 mcd.approve_dai(seller)
 
-reserve_dai(mcd, mcd.collaterals['ETH-C'], seller, amount, Wad.from_number(2))
+reserve_dai(mcd, mcd.collaterals["ETH-C"], seller, amount, Wad.from_number(2))
 assert mcd.dai_adapter.exit(seller, amount).transact(from_address=seller)
-assert mcd.dai.transfer_from(
-    seller, keeper_address, amount).transact(from_address=seller)
+assert mcd.dai.transfer_from(seller, keeper_address, amount).transact(
+    from_address=seller
+)
 print(
-    f'Purchased {str(amount)} Dai, keeper token balance is {str(mcd.dai.balance_of(keeper_address))}')
+    f"Purchased {str(amount)} Dai, keeper token balance is {str(mcd.dai.balance_of(keeper_address))}"
+)

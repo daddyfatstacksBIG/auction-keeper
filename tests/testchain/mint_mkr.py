@@ -21,7 +21,7 @@ from pymaker.numeric import Wad, Ray, Rad
 from tests.conftest import keeper_address, mcd, mint_mkr, web3
 
 mcd = mcd(web3())
-collateral = mcd.collaterals['ETH-C']
+collateral = mcd.collaterals["ETH-C"]
 keeper_address = keeper_address(web3())
 
 amount = Wad.from_number(float(sys.argv[1]))
@@ -29,4 +29,6 @@ assert amount > Wad(0)
 
 mint_mkr(mcd.mkr, keeper_address, amount)
 
-print(f'Minted {str(amount)} MKR, keeper token balance is {str(mcd.mkr.balance_of(keeper_address))}')
+print(
+    f"Minted {str(amount)} MKR, keeper token balance is {str(mcd.mkr.balance_of(keeper_address))}"
+)
