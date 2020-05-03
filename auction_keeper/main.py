@@ -14,7 +14,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import argparse
 import asyncio
 import functools
@@ -24,20 +23,27 @@ import threading
 import time
 from datetime import datetime
 
-from auction_keeper.gas import DynamicGasPrice, UpdatableGasPrice
-from auction_keeper.logic import Auction, Auctions
-from auction_keeper.model import ModelFactory
-from auction_keeper.strategy import (FlapperStrategy, FlipperStrategy,
-                                     FlopperStrategy)
-from auction_keeper.urn_history import UrnHistory
 from pymaker import Address
 from pymaker.deployment import DssDeployment
 from pymaker.keys import register_keys
 from pymaker.lifecycle import Lifecycle
 from pymaker.model import Token
-from pymaker.numeric import Rad, Ray, Wad
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
 from requests.exceptions import RequestException
-from web3 import HTTPProvider, Web3
+from web3 import HTTPProvider
+from web3 import Web3
+
+from auction_keeper.gas import DynamicGasPrice
+from auction_keeper.gas import UpdatableGasPrice
+from auction_keeper.logic import Auction
+from auction_keeper.logic import Auctions
+from auction_keeper.model import ModelFactory
+from auction_keeper.strategy import FlapperStrategy
+from auction_keeper.strategy import FlipperStrategy
+from auction_keeper.strategy import FlopperStrategy
+from auction_keeper.urn_history import UrnHistory
 
 
 class AuctionKeeper:

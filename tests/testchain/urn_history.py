@@ -14,17 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-
 import logging
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from pprint import pprint
 
-from auction_keeper.urn_history import UrnHistory
 from pymaker import Address
 from pymaker.deployment import DssDeployment
-from web3 import HTTPProvider, Web3
+from web3 import HTTPProvider
+from web3 import Web3
+
+from auction_keeper.urn_history import UrnHistory
 
 logging.basicConfig(
     format="%(asctime)-15s %(levelname)-8s %(message)s", level=logging.DEBUG

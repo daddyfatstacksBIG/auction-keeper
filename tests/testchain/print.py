@@ -14,13 +14,18 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import argparse
 import sys
 from pprint import pprint
 
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import flog_and_heal, gal_address, mcd, web3
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from tests.conftest import flog_and_heal
+from tests.conftest import gal_address
+from tests.conftest import mcd
+from tests.conftest import web3
 
 parser = argparse.ArgumentParser(prog="print")
 parser.add_argument(

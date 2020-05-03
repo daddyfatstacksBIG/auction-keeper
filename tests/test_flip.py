@@ -14,25 +14,35 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from datetime import datetime
 from typing import Optional
 
 import pytest
-from auction_keeper.gas import DynamicGasPrice
-from auction_keeper.main import AuctionKeeper
-from auction_keeper.model import Parameters
 from pymaker import Address
 from pymaker.approval import hope_directly
 from pymaker.auctions import Flipper
 from pymaker.deployment import DssDeployment
 from pymaker.dss import Collateral
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import (bite, create_unsafe_cdp, flog_and_heal,
-                            keeper_address, mcd, models, reserve_dai,
-                            simulate_model_output, web3)
-from tests.helper import (TransactionIgnoringTest, args, time_travel_by,
-                          wait_for_other_threads)
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from auction_keeper.gas import DynamicGasPrice
+from auction_keeper.main import AuctionKeeper
+from auction_keeper.model import Parameters
+from tests.conftest import bite
+from tests.conftest import create_unsafe_cdp
+from tests.conftest import flog_and_heal
+from tests.conftest import keeper_address
+from tests.conftest import mcd
+from tests.conftest import models
+from tests.conftest import reserve_dai
+from tests.conftest import simulate_model_output
+from tests.conftest import web3
+from tests.helper import args
+from tests.helper import time_travel_by
+from tests.helper import TransactionIgnoringTest
+from tests.helper import wait_for_other_threads
 
 tend_lot = Wad.from_number(1.2)
 tend_small_lot = Wad(2000)

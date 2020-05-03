@@ -14,19 +14,31 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import asyncio
 import time
 
 import pytest
-from auction_keeper.gas import DynamicGasPrice, UpdatableGasPrice
-from auction_keeper.main import AuctionKeeper
-from pymaker import Address, Transact, Wad
-from pymaker.auctions import Flapper, Flipper, Flopper
-from pymaker.dss import Cat, DaiJoin, GemJoin, Vow
+from pymaker import Address
+from pymaker import Transact
+from pymaker import Wad
+from pymaker.auctions import Flapper
+from pymaker.auctions import Flipper
+from pymaker.auctions import Flopper
+from pymaker.dss import Cat
+from pymaker.dss import DaiJoin
+from pymaker.dss import GemJoin
+from pymaker.dss import Vow
 from pymaker.token import DSToken
-from tests.conftest import keeper_address, mcd, web3
-from tests.helper import TransactionIgnoringTest, args, wait_for_other_threads
+
+from auction_keeper.gas import DynamicGasPrice
+from auction_keeper.gas import UpdatableGasPrice
+from auction_keeper.main import AuctionKeeper
+from tests.conftest import keeper_address
+from tests.conftest import mcd
+from tests.conftest import web3
+from tests.helper import args
+from tests.helper import TransactionIgnoringTest
+from tests.helper import wait_for_other_threads
 
 
 class TestTransactionMocking(TransactionIgnoringTest):

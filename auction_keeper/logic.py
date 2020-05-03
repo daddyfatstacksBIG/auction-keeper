@@ -14,14 +14,19 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import logging
 from typing import Optional
 
+from pymaker import Address
+from pymaker import Transact
+from pymaker import TransactStatus
+
 from auction_keeper.gas import UpdatableGasPrice
-from auction_keeper.model import (Model, ModelFactory, Parameters, Stance,
-                                  Status)
-from pymaker import Address, Transact, TransactStatus
+from auction_keeper.model import Model
+from auction_keeper.model import ModelFactory
+from auction_keeper.model import Parameters
+from auction_keeper.model import Stance
+from auction_keeper.model import Status
 
 
 class Auction:

@@ -14,12 +14,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 from pprint import pformat
 from typing import Optional
 
-from pygasprice_client import EtherchainOrg, EthGasStation, POANetwork
-from pymaker.gas import GasPrice, GeometricGasPrice
+from pygasprice_client import EtherchainOrg
+from pygasprice_client import EthGasStation
+from pygasprice_client import POANetwork
+from pymaker.gas import GasPrice
+from pymaker.gas import GeometricGasPrice
 
 
 class UpdatableGasPrice(GasPrice):

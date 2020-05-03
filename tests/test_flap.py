@@ -14,23 +14,39 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import math
 
 import pytest
+from pymaker.approval import directly
+from pymaker.approval import hope_directly
+from pymaker.dss import Collateral
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
 from auction_keeper.gas import DynamicGasPrice
 from auction_keeper.main import AuctionKeeper
 from auction_keeper.model import Parameters
-from pymaker.approval import directly, hope_directly
-from pymaker.dss import Collateral
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import (bite, c, create_cdp_with_surplus, gal_address,
-                            is_cdp_safe, keeper_address, max_dart, mcd,
-                            mint_mkr, models, other_address, our_address,
-                            reserve_dai, set_collateral_price,
-                            simulate_model_output, web3)
-from tests.helper import (TransactionIgnoringTest, args, time_travel_by,
-                          wait_for_other_threads)
+from tests.conftest import bite
+from tests.conftest import c
+from tests.conftest import create_cdp_with_surplus
+from tests.conftest import gal_address
+from tests.conftest import is_cdp_safe
+from tests.conftest import keeper_address
+from tests.conftest import max_dart
+from tests.conftest import mcd
+from tests.conftest import mint_mkr
+from tests.conftest import models
+from tests.conftest import other_address
+from tests.conftest import our_address
+from tests.conftest import reserve_dai
+from tests.conftest import set_collateral_price
+from tests.conftest import simulate_model_output
+from tests.conftest import web3
+from tests.helper import args
+from tests.helper import time_travel_by
+from tests.helper import TransactionIgnoringTest
+from tests.helper import wait_for_other_threads
 
 
 @pytest.fixture()

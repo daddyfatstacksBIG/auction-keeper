@@ -14,12 +14,17 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import sys
 
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import (create_unsafe_cdp, gal_address, is_cdp_safe, mcd,
-                            web3)
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from tests.conftest import create_unsafe_cdp
+from tests.conftest import gal_address
+from tests.conftest import is_cdp_safe
+from tests.conftest import mcd
+from tests.conftest import web3
 
 mcd = mcd(web3())
 address = gal_address(web3())

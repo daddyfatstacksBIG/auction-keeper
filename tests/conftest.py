@@ -14,23 +14,29 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import logging
 from typing import Optional
 
 import pytest
-from auction_keeper.logic import Stance
-from auction_keeper.main import AuctionKeeper
 from mock import MagicMock
 from pymaker import Address
 from pymaker.deployment import DssDeployment
-from pymaker.dss import Collateral, Ilk, Urn
+from pymaker.dss import Collateral
+from pymaker.dss import Ilk
+from pymaker.dss import Urn
 from pymaker.feed import DSValue
 from pymaker.keys import register_keys
 from pymaker.model import Token
-from pymaker.numeric import Rad, Ray, Wad
-from pymaker.token import DSEthToken, DSToken
-from web3 import HTTPProvider, Web3
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+from pymaker.token import DSEthToken
+from pymaker.token import DSToken
+from web3 import HTTPProvider
+from web3 import Web3
+
+from auction_keeper.logic import Stance
+from auction_keeper.main import AuctionKeeper
 
 
 @pytest.fixture(scope="session")

@@ -14,11 +14,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import sys
 
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import keeper_address, mcd, mint_mkr, web3
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from tests.conftest import keeper_address
+from tests.conftest import mcd
+from tests.conftest import mint_mkr
+from tests.conftest import web3
 
 mcd = mcd(web3())
 collateral = mcd.collaterals["ETH-C"]

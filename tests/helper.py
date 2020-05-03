@@ -14,7 +14,6 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import asyncio
 import logging
 import sys
@@ -24,7 +23,9 @@ from contextlib import contextmanager
 from io import StringIO
 
 from mock import MagicMock
-from pymaker import Receipt, Transact, Wad
+from pymaker import Receipt
+from pymaker import Transact
+from pymaker import Wad
 from web3 import Web3
 
 

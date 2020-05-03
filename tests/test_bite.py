@@ -14,15 +14,23 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import pytest
-from auction_keeper.main import AuctionKeeper
 from pymaker.approval import hope_directly
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import (create_unsafe_cdp, keeper_address, mcd,
-                            purchase_dai, reserve_dai, web3)
-from tests.helper import (TransactionIgnoringTest, args, time_travel_by,
-                          wait_for_other_threads)
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from auction_keeper.main import AuctionKeeper
+from tests.conftest import create_unsafe_cdp
+from tests.conftest import keeper_address
+from tests.conftest import mcd
+from tests.conftest import purchase_dai
+from tests.conftest import reserve_dai
+from tests.conftest import web3
+from tests.helper import args
+from tests.helper import time_travel_by
+from tests.helper import TransactionIgnoringTest
+from tests.helper import wait_for_other_threads
 
 
 @pytest.mark.timeout(60)

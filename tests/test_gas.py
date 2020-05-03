@@ -14,12 +14,14 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import pytest
+from pygasprice_client import EtherchainOrg
+from pygasprice_client import EthGasStation
+from pygasprice_client import POANetwork
+from pymaker.gas import DefaultGasPrice
+
 from auction_keeper.gas import DynamicGasPrice
 from auction_keeper.main import AuctionKeeper
-from pygasprice_client import EtherchainOrg, EthGasStation, POANetwork
-from pymaker.gas import DefaultGasPrice
 from tests.helper import args
 
 GWEI = 1000000000

@@ -14,11 +14,16 @@
 #
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 import sys
 
-from pymaker.numeric import Rad, Ray, Wad
-from tests.conftest import gal_address, mcd, web3, wrap_eth
+from pymaker.numeric import Rad
+from pymaker.numeric import Ray
+from pymaker.numeric import Wad
+
+from tests.conftest import gal_address
+from tests.conftest import mcd
+from tests.conftest import web3
+from tests.conftest import wrap_eth
 
 mcd = mcd(web3())
 address = gal_address(web3())
