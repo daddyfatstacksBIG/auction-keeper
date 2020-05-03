@@ -164,7 +164,7 @@ done
 The stdout provides a price for the collateral (for `flip` auctions) or MKR (for
 `flap` and `flop` auctions). The sleep locks the price in place for the
 specified duration, after which the keeper will restart the price model and read
-a new price.  
+a new price.
 Consider this your price update interval. To conserve system resources, take
 care not to set this too low.
 
@@ -259,7 +259,7 @@ the keeper will start with a price of 10 Gwei.
 Auction keeper periodically attempts to increase gas price when transactions are
 queueing. Every 30 seconds, a transaction's gas price will be multiplied by
 `--gas-reactive-multiplier` (default `2.25`, or 225%) until it is mined or
-`--gas-maximum` (default 5000 Gwei) is reached.  
+`--gas-maximum` (default 5000 Gwei) is reached.
 Note that
 [Parity](https://wiki.parity.io/Transactions-Queue#dropping-conditions), as of
 this writing, requires a minimum gas increase of `1.125` (112.5%) to propogate
@@ -290,7 +290,7 @@ the `Vat`.
 
 **Using the `eth-from` account on multiple keepers is also discouraged** as it
 complicates `Vat` inventory management. When running multiple keepers using the
-same account, the balance of Dai in the `Vat` will be shared across keepers.  
+same account, the balance of Dai in the `Vat` will be shared across keepers.
 If using the feature, set `--vat-dai-target` to the same value on each keeper,
 and sufficiently high to cover total desired exposure.
 
