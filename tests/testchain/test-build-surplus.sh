@@ -2,7 +2,7 @@
 pushd ../.. > /dev/null
 dir="$(dirname "$0")"
 
-export PYTHONPATH=$PYTHONPATH:$dir:$dir/lib/pymaker
+export PYTHONPATH="$PYTHONPATH:$dir:$dir"/lib/pymaker
 
 
 while true

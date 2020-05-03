@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 export ETH_RPC_URL=http://0.0.0.0:8545
 
 export LOGS_DIR=../logs
-mkdir -p ${LOGS_DIR}
+mkdir -p "$LOGS_DIR"
 
 export ACCOUNT_ADDRESS=0x57Da1B8F38A5eCF91E9FEe8a047DF0F0A88716A1
 export ACCOUNT_KEY="key_file=../../lib/pymaker/tests/config/keys/UnlimitedChain/key4.json,pass_file=/dev/null"

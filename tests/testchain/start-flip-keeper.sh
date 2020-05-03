@@ -12,13 +12,13 @@ ID=$2
 ILK=${3:-ETH-C}
 
 ../../bin/auction-keeper \
-    --rpc-host ${ETH_RPC_URL:?} \
+    --rpc-host "${ETH_RPC_URL:?}" \
     --rpc-timeout 30 \
-    --eth-from ${ACCOUNT_ADDRESS?:} \
-    --eth-key ${ACCOUNT_KEY?:} \
+    --eth-from "${ACCOUNT_ADDRESS?:}" \
+    --eth-key "${ACCOUNT_KEY?:}" \
     --type flip \
-    --ilk ${ILK} \
+    --ilk "$ILK" \
     --vat-dai-target 500000 \
     --keep-dai-in-vat-on-exit \
-    --model ${dir}/${MODEL} \
-    2> >(tee -a ${LOGS_DIR?:}/auction-keeper-${ID}.log >&2)
+    --model "$dir/$MODEL" \
+    2> >(tee -a "${LOGS_DIR?:}/auction-keeper-$ID".log >&2)
