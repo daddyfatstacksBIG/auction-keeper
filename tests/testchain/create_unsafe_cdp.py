@@ -17,8 +17,9 @@
 
 import sys
 
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import create_unsafe_cdp, is_cdp_safe, mcd, gal_address, web3
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import (create_unsafe_cdp, gal_address, is_cdp_safe, mcd,
+                            web3)
 
 mcd = mcd(web3())
 address = gal_address(web3())

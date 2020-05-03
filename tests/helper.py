@@ -16,18 +16,16 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import asyncio
-import sys
 import logging
+import sys
 import threading
 import time
 from contextlib import contextmanager
 from io import StringIO
+
 from mock import MagicMock
-from pymaker import Wad
+from pymaker import Receipt, Transact, Wad
 from web3 import Web3
-
-
-from pymaker import Receipt, Transact
 
 
 def args(arguments: str) -> list:

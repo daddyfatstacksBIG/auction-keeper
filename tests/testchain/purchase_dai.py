@@ -17,8 +17,9 @@
 
 import sys
 
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import keeper_address, mcd, other_address, reserve_dai, web3
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import (keeper_address, mcd, other_address, reserve_dai,
+                            web3)
 
 mcd = mcd(web3())
 collateral = mcd.collaterals["ETH-C"]

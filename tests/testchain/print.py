@@ -17,11 +17,10 @@
 
 import argparse
 import sys
-
 from pprint import pprint
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import flog_and_heal, mcd, gal_address, web3
 
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import flog_and_heal, gal_address, mcd, web3
 
 parser = argparse.ArgumentParser(prog="print")
 parser.add_argument(

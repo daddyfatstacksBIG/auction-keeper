@@ -15,39 +15,25 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import pytest
 import time
+from datetime import datetime, timezone
 
+import pytest
 from auction_keeper.gas import DynamicGasPrice
 from auction_keeper.main import AuctionKeeper
 from auction_keeper.model import Parameters
 from auction_keeper.strategy import FlopperStrategy
-from datetime import datetime, timezone
 from pymaker import Address
 from pymaker.approval import hope_directly
 from pymaker.auctions import Flopper
 from pymaker.deployment import DssDeployment
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import (
-    bite,
-    create_unsafe_cdp,
-    flog_and_heal,
-    gal_address,
-    keeper_address,
-    mcd,
-    models,
-    our_address,
-    other_address,
-    reserve_dai,
-    simulate_model_output,
-    web3,
-)
-from tests.helper import (
-    args,
-    time_travel_by,
-    wait_for_other_threads,
-    TransactionIgnoringTest,
-)
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import (bite, create_unsafe_cdp, flog_and_heal,
+                            gal_address, keeper_address, mcd, models,
+                            other_address, our_address, reserve_dai,
+                            simulate_model_output, web3)
+from tests.helper import (TransactionIgnoringTest, args, time_travel_by,
+                          wait_for_other_threads)
 from web3 import Web3
 
 

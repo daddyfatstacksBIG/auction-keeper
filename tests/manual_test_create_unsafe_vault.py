@@ -19,15 +19,14 @@ import logging
 import os
 import sys
 import time
-from web3 import Web3, HTTPProvider
 
 from pymaker import Address
 from pymaker.deployment import DssDeployment
 from pymaker.keys import register_keys
 from pymaker.model import Token
-from pymaker.numeric import Wad, Ray
+from pymaker.numeric import Ray, Wad
 from tests.conftest import create_risky_cdp, is_cdp_safe
-
+from web3 import HTTPProvider, Web3
 
 web3 = Web3(
     HTTPProvider(endpoint_uri=os.environ["ETH_RPC_URL"], request_kwargs={"timeout": 30})

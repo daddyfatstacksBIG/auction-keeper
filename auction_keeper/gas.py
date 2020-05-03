@@ -18,7 +18,7 @@
 from pprint import pformat
 from typing import Optional
 
-from pygasprice_client import EthGasStation, EtherchainOrg, POANetwork
+from pygasprice_client import EtherchainOrg, EthGasStation, POANetwork
 from pymaker.gas import GasPrice, GeometricGasPrice
 
 

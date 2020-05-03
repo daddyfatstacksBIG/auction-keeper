@@ -16,38 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import math
-import pytest
 
+import pytest
 from auction_keeper.gas import DynamicGasPrice
 from auction_keeper.main import AuctionKeeper
 from auction_keeper.model import Parameters
 from pymaker.approval import directly, hope_directly
 from pymaker.dss import Collateral
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import (
-    c,
-    mcd,
-    mint_mkr,
-    reserve_dai,
-    set_collateral_price,
-    web3,
-    our_address,
-    keeper_address,
-    other_address,
-    gal_address,
-    max_dart,
-    is_cdp_safe,
-    bite,
-    create_cdp_with_surplus,
-    simulate_model_output,
-    models,
-)
-from tests.helper import (
-    args,
-    time_travel_by,
-    wait_for_other_threads,
-    TransactionIgnoringTest,
-)
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import (bite, c, create_cdp_with_surplus, gal_address,
+                            is_cdp_safe, keeper_address, max_dart, mcd,
+                            mint_mkr, models, other_address, our_address,
+                            reserve_dai, set_collateral_price,
+                            simulate_model_output, web3)
+from tests.helper import (TransactionIgnoringTest, args, time_travel_by,
+                          wait_for_other_threads)
 
 
 @pytest.fixture()

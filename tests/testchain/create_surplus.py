@@ -17,9 +17,8 @@
 
 import sys
 
-from pymaker.numeric import Wad, Ray, Rad
-from tests.conftest import mcd, gal_address, web3, wrap_eth
-
+from pymaker.numeric import Rad, Ray, Wad
+from tests.conftest import gal_address, mcd, web3, wrap_eth
 
 mcd = mcd(web3())
 address = gal_address(web3())

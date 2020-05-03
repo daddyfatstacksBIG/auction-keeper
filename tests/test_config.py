@@ -17,16 +17,16 @@
 
 import asyncio
 import time
-import pytest
 
+import pytest
 from auction_keeper.gas import DynamicGasPrice, UpdatableGasPrice
 from auction_keeper.main import AuctionKeeper
 from pymaker import Address, Transact, Wad
-from pymaker.auctions import Flipper, Flapper, Flopper
+from pymaker.auctions import Flapper, Flipper, Flopper
 from pymaker.dss import Cat, DaiJoin, GemJoin, Vow
 from pymaker.token import DSToken
 from tests.conftest import keeper_address, mcd, web3
-from tests.helper import args, TransactionIgnoringTest, wait_for_other_threads
+from tests.helper import TransactionIgnoringTest, args, wait_for_other_threads
 
 
 class TestTransactionMocking(TransactionIgnoringTest):

@@ -16,14 +16,11 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import pytest
-
-from auction_keeper.main import AuctionKeeper
-from pymaker.gas import DefaultGasPrice
-from pygasprice_client import EthGasStation, POANetwork, EtherchainOrg
-
 from auction_keeper.gas import DynamicGasPrice
+from auction_keeper.main import AuctionKeeper
+from pygasprice_client import EtherchainOrg, EthGasStation, POANetwork
+from pymaker.gas import DefaultGasPrice
 from tests.helper import args
-
 
 GWEI = 1000000000
 default_initial_gas = 10

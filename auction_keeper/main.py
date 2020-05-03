@@ -19,26 +19,25 @@ import argparse
 import asyncio
 import functools
 import logging
-import time
 import sys
 import threading
-
+import time
 from datetime import datetime
-from requests.exceptions import RequestException
-from web3 import Web3, HTTPProvider
 
+from auction_keeper.gas import DynamicGasPrice, UpdatableGasPrice
+from auction_keeper.logic import Auction, Auctions
+from auction_keeper.model import ModelFactory
+from auction_keeper.strategy import (FlapperStrategy, FlipperStrategy,
+                                     FlopperStrategy)
+from auction_keeper.urn_history import UrnHistory
 from pymaker import Address
 from pymaker.deployment import DssDeployment
 from pymaker.keys import register_keys
 from pymaker.lifecycle import Lifecycle
 from pymaker.model import Token
-from pymaker.numeric import Wad, Ray, Rad
-
-from auction_keeper.gas import DynamicGasPrice, UpdatableGasPrice
-from auction_keeper.logic import Auction, Auctions
-from auction_keeper.model import ModelFactory
-from auction_keeper.strategy import FlopperStrategy, FlapperStrategy, FlipperStrategy
-from auction_keeper.urn_history import UrnHistory
+from pymaker.numeric import Rad, Ray, Wad
+from requests.exceptions import RequestException
+from web3 import HTTPProvider, Web3
 
 
 class AuctionKeeper:

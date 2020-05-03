@@ -20,12 +20,11 @@ import logging
 import sys
 from datetime import datetime, timedelta
 from pprint import pprint
-from web3 import Web3, HTTPProvider
 
 from auction_keeper.urn_history import UrnHistory
 from pymaker import Address
 from pymaker.deployment import DssDeployment
-
+from web3 import HTTPProvider, Web3
 
 logging.basicConfig(
     format="%(asctime)-15s %(levelname)-8s %(message)s", level=logging.DEBUG

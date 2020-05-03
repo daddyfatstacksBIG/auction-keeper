@@ -16,22 +16,21 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
-import pytest
-
-from mock import MagicMock
 from typing import Optional
-from web3 import Web3, HTTPProvider
 
+import pytest
 from auction_keeper.logic import Stance
 from auction_keeper.main import AuctionKeeper
+from mock import MagicMock
 from pymaker import Address
 from pymaker.deployment import DssDeployment
 from pymaker.dss import Collateral, Ilk, Urn
 from pymaker.feed import DSValue
 from pymaker.keys import register_keys
 from pymaker.model import Token
-from pymaker.numeric import Wad, Ray, Rad
+from pymaker.numeric import Rad, Ray, Wad
 from pymaker.token import DSEthToken, DSToken
+from web3 import HTTPProvider, Web3
 
 
 @pytest.fixture(scope="session")

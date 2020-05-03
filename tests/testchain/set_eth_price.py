@@ -17,7 +17,7 @@
 
 import sys
 
-from pymaker.numeric import Wad, Ray, Rad
+from pymaker.numeric import Rad, Ray, Wad
 from tests.conftest import mcd, set_collateral_price, web3
 
 mcd = mcd(web3())
